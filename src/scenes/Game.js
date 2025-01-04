@@ -1,76 +1,70 @@
 import { Scene } from 'phaser';
 
-export class Game extends Scene {
+export class Game extends Phaser.Scene {
     constructor() {
         super('Game');
     }
 
+    preload() {
+        // Load assets here...
+    }
+
     create() {
-        // Set background
-        this.cameras.main.setBackgroundColor(0x00ff00);
-        this.add.image(512, 384, 'background').setAlpha(0.5);
-
-        // Add character sprite
-        this.character = this.add.sprite(512, 384, 'logsprite_0').setScale(2);
-
-        // Set default animation
-        this.character.play('walk');
-
-        // Keyboard controls
-        this.cursors = this.input.keyboard.createCursorKeys();
+        // Set up keyboard input
+        this.cursors = this.input.keyboard.createCursorKeys(); // Arrow keys for movement
         this.keys = this.input.keyboard.addKeys({
-            block: Phaser.Input.Keyboard.KeyCodes.SPACE,
-            dizzy: Phaser.Input.Keyboard.KeyCodes.D,
-            hit: Phaser.Input.Keyboard.KeyCodes.H,
+            attack: Phaser.Input.Keyboard.KeyCodes.SPACE, // Spacebar for attack
+            leftjab: Phaser.Input.Keyboard.KeyCodes.A,    // A for left jab
+            rightjab: Phaser.Input.Keyboard.KeyCodes.D,   // D for right jab
+            block: Phaser.Input.Keyboard.KeyCodes.S,      // S for block
         });
 
-        // Display some placeholder text
-        this.add.text(512, 384, 'Use arrow keys to move, SPACE to block,\nD for dizzy, and H to get hit.', {
-            fontFamily: 'Arial Black',
-            fontSize: 24,
-            color: '#ffffff',
-            align: 'center',
-        }).setOrigin(0.5);
+        // Example sprite
+        this.character = this.add.sprite(400, 300, 'characterKey'); // Replace with your sprite key
+        this.character.setScale(2);
 
-        // Example scene transition
-        this.input.once('pointerdown', () => {
-            this.scene.start('GameOver');
-        });
+        // Play idle animation initially
+        this.character.play('idle');
     }
 
     update() {
-        const character = this.character;
-
-        // Movement controls
+        // Movement logic with arrow keys
         if (this.cursors.left.isDown) {
-            character.setFlipX(true);
-            character.x -= 2;
-            character.play('walk', true);
+            this.character.x -= 2;
+            this.character.play('walk', true);
         } else if (this.cursors.right.isDown) {
-            character.setFlipX(false);
-            character.x += 2;
-            character.play('walk', true);
+            this.character.x += 2;
+            this.character.play('walk', true);
         } else if (this.cursors.up.isDown) {
-            character.y -= 2;
-            character.play('walk', true);
+            this.character.y -= 2;
+            this.character.play('walk', true);
         } else if (this.cursors.down.isDown) {
-            character.y += 2;
-            character.play('walk', true);
+            this.character.y += 2;
+            this.character.play('walk', true);
         } else {
-            character.stop();
+            // Stop moving
+            this.character.play('idle', true);
         }
 
-        // Action controls
+        // Attack logic with Spacebar
+        if (Phaser.Input.Keyboard.JustDown(this.keys.attack)) {
+            this.character.play('attack', true);
+        }
+
+        // Left jab logic with A key
+        if (Phaser.Input.Keyboard.JustDown(this.keys.leftjab)) {
+            this.character.play('leftjab', true);
+        }
+
+        // Right jab logic with D key
+        if (Phaser.Input.Keyboard.JustDown(this.keys.rightjab)) {
+            this.character.play('rightjab', true);
+        }
+
+        // Block logic with S key
         if (Phaser.Input.Keyboard.JustDown(this.keys.block)) {
-            character.play('block', true);
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.keys.dizzy)) {
-            character.play('dizzy', true);
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.keys.hit)) {
-            character.play('hit', true);
+            this.character.play('block', true);
         }
     }
 }
+

@@ -16,29 +16,23 @@ export class Preloader extends Scene {
     }
 
     preload() {
-        // Set path for assets
-        this.load.setPath('assets');
-
-        // Load assets for the game
-        this.load.image('logo', 'logo.png');
-        this.load.image('background', 'background.png');
-
-        // Load sprite frames (logsprite_0 to logsprite_44)
+        // Load all sprite frames (00_logsprite.png to 44_logsprite.png)
         for (let i = 0; i <= 44; i++) {
-            this.load.image(`logsprite_${i}`, `logsprite_${i.toString().padStart(2, '0')}.png`);
+            const fileName = `${i.toString().padStart(2, '0')}00_logsprite.png`;
+            this.load.image(fileName, `/assets/${fileName}`);
         }
     }
 
     create() {
-        // Create animations
+        // Create animations for all actions
         this.anims.create({
             key: 'block',
             frames: [
-                { key: 'logsprite_0' },
-                { key: 'logsprite_1' },
-                { key: 'logsprite_2' },
-                { key: 'logsprite_3' },
-                { key: 'logsprite_4' }
+                { key: '00_logsprite.png' },
+                { key: '01_logsprite.png' },
+                { key: '02_logsprite.png' },
+                { key: '03_logsprite.png' },
+                { key: '04_logsprite.png' },
             ],
             frameRate: 10,
             repeat: -1,
@@ -47,11 +41,11 @@ export class Preloader extends Scene {
         this.anims.create({
             key: 'dizzy',
             frames: [
-                { key: 'logsprite_5' },
-                { key: 'logsprite_6' },
-                { key: 'logsprite_7' },
-                { key: 'logsprite_8' },
-                { key: 'logsprite_9' }
+                { key: '05_logsprite.png' },
+                { key: '06_logsprite.png' },
+                { key: '07_logsprite.png' },
+                { key: '08_logsprite.png' },
+                { key: '09_logsprite.png' },
             ],
             frameRate: 8,
             repeat: -1,
@@ -60,11 +54,11 @@ export class Preloader extends Scene {
         this.anims.create({
             key: 'walk',
             frames: [
-                { key: 'logsprite_10' },
-                { key: 'logsprite_11' },
-                { key: 'logsprite_12' },
-                { key: 'logsprite_13' },
-                { key: 'logsprite_14' }
+                { key: '10_logsprite.png' },
+                { key: '11_logsprite.png' },
+                { key: '12_logsprite.png' },
+                { key: '13_logsprite.png' },
+                { key: '14_logsprite.png' },
             ],
             frameRate: 12,
             repeat: -1,
@@ -73,22 +67,76 @@ export class Preloader extends Scene {
         this.anims.create({
             key: 'hit',
             frames: [
-                { key: 'logsprite_15' },
-                { key: 'logsprite_16' },
-                { key: 'logsprite_17' },
-                { key: 'logsprite_18' },
-                { key: 'logsprite_19' },
-                { key: 'logsprite_20' },
-                { key: 'logsprite_21' },
-                { key: 'logsprite_22' },
-                { key: 'logsprite_23' },
-                { key: 'logsprite_24' }
+                { key: '15_logsprite.png' },
+                { key: '16_logsprite.png' },
+                { key: '17_logsprite.png' },
+                { key: '18_logsprite.png' },
+                { key: '19_logsprite.png' },
+                { key: '20_logsprite.png' },
+                { key: '21_logsprite.png' },
+                { key: '22_logsprite.png' },
+                { key: '23_logsprite.png' },
+                { key: '24_logsprite.png' },
             ],
             frameRate: 15,
             repeat: 0,
         });
 
-        // Transition to MainMenu scene
+        this.anims.create({
+            key: 'idle',
+            frames: [
+                { key: '25_logsprite.png' },
+                { key: '26_logsprite.png' },
+                { key: '27_logsprite.png' },
+                { key: '28_logsprite.png' },
+                { key: '29_logsprite.png' },
+            ],
+            frameRate: 8,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: 'getKnockedDown',
+            frames: [
+                { key: '30_logsprite.png' },
+                { key: '31_logsprite.png' },
+                { key: '32_logsprite.png' },
+                { key: '33_logsprite.png' },
+                { key: '34_logsprite.png' },
+            ],
+            frameRate: 10,
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: 'leftjab',
+            frames: [
+                { key: '35_logsprite.png' },
+                { key: '36_logsprite.png' },
+                { key: '37_logsprite.png' },
+                { key: '38_logsprite.png' },
+                { key: '39_logsprite.png' },
+            ],
+            frameRate: 100,
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: 'rightjab',
+            frames: [
+                { key: '40_logsprite.png' },
+                { key: '41_logsprite.png' },
+                { key: '42_logsprite.png' },
+                { key: '43_logsprite.png' },
+                { key: '44_logsprite.png' },
+            ],
+            frameRate: 100,
+            repeat: 0,
+        });
+
+        console.log('Animations created:', this.anims.anims.entries);
+
+        // Move to MainMenu scene
         this.scene.start('MainMenu');
     }
 }
