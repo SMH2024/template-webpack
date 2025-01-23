@@ -30,16 +30,16 @@ export class Game extends Phaser.Scene {
     update() {
         // Movement logic with arrow keys
         if (this.cursors.left.isDown) {
-            this.character.x -= 2;
+            this.character.x -= 120 * (this.game.loop.delta / 1000);
             this.character.play('walk', true);
         } else if (this.cursors.right.isDown) {
-            this.character.x += 2;
+            this.character.x += 120 * (this.game.loop.delta / 1000);
             this.character.play('walk', true);
         } else if (this.cursors.up.isDown) {
-            this.character.y -= 2;
+            this.character.y -= 120 * (this.game.loop.delta / 1000);
             this.character.play('walk', true);
         } else if (this.cursors.down.isDown) {
-            this.character.y += 2;
+            this.character.y += 120 * (this.game.loop.delta / 1000);
             this.character.play('walk', true);
         } else {
             // Stop moving

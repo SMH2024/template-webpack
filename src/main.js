@@ -12,6 +12,27 @@ const config = {
     height: 768,
     parent: 'game-container',
     backgroundColor: '#028af8',
+    render: {
+        pixelArt: true,
+        powerPreference: 'high-performance',
+        antialias: false,
+        roundPixels: true
+    },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false,
+            fps: 60,
+            timeScale: 1,
+            gravity: { y: 0 },
+            checkCollision: {
+                up: true,
+                down: true,
+                left: true,
+                right: true
+            }
+        }
+    },
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH

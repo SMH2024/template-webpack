@@ -35,7 +35,7 @@ export class Preloader extends Scene {
                 { key: '04_logsprite.png' },
             ],
             frameRate: 10,
-            repeat: -1,
+            repeat: 0,
         });
 
         this.anims.create({
@@ -47,8 +47,8 @@ export class Preloader extends Scene {
                 { key: '08_logsprite.png' },
                 { key: '09_logsprite.png' },
             ],
-            frameRate: 8,
-            repeat: -1,
+            frameRate: 10,
+            repeat: 0,
         });
 
         this.anims.create({
@@ -60,8 +60,8 @@ export class Preloader extends Scene {
                 { key: '13_logsprite.png' },
                 { key: '14_logsprite.png' },
             ],
-            frameRate: 12,
-            repeat: -1,
+            frameRate: 10,
+            repeat: 0,
         });
 
         this.anims.create({
@@ -78,7 +78,7 @@ export class Preloader extends Scene {
                 { key: '23_logsprite.png' },
                 { key: '24_logsprite.png' },
             ],
-            frameRate: 15,
+            frameRate: 10,
             repeat: 0,
         });
 
@@ -91,8 +91,8 @@ export class Preloader extends Scene {
                 { key: '28_logsprite.png' },
                 { key: '29_logsprite.png' },
             ],
-            frameRate: 8,
-            repeat: -1,
+            frameRate: 10,
+            repeat: 0,
         });
 
         this.anims.create({
@@ -117,7 +117,7 @@ export class Preloader extends Scene {
                 { key: '38_logsprite.png' },
                 { key: '39_logsprite.png' },
             ],
-            frameRate: 100,
+            frameRate: 10,
             repeat: 0,
         });
 
@@ -130,7 +130,7 @@ export class Preloader extends Scene {
                 { key: '43_logsprite.png' },
                 { key: '44_logsprite.png' },
             ],
-            frameRate: 100,
+            frameRate: 10,
             repeat: 0,
         });
 

@@ -14,7 +14,7 @@ module.exports = {
     entry: "./src/main.js",
     output: {
         path: path.resolve(process.cwd(), 'dist'),
-        filename: "./bundle.min.js"
+        filename: "[name].[contenthash].js"
     },
     devtool: false,
     performance: {
