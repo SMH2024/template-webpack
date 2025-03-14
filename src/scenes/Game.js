@@ -1,10 +1,8 @@
 import { Scene } from 'phaser';
 import { CarPlayer, Inputs } from '../objects';
 
-export class Game extends Scene
-{
-    constructor ()
-    {
+export class Game extends Phaser.Scene {
+    constructor() {
         super('Game');
     }
 
@@ -176,3 +174,5 @@ export class Game extends Scene
         );
     }
 }
+    
+
