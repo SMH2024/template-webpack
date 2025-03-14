@@ -29,18 +29,52 @@ export class Preloader extends Scene
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
+        //  Load the assets for the game
         this.load.setPath('assets');
 
         this.load.image('logo', 'logo.png');
+        
+        // Load isometric pixel tile
+        this.load.image('iso-pixel', 'isometric/isometric_pixel_0215.png');
+        
+        // Load supercar direction spritesheets - each contains 12 animation frames
+        this.load.spritesheet('car-north', 'isometric/cars/supercar/north.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-northeast', 'isometric/cars/supercar/northeast.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-east', 'isometric/cars/supercar/east.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-southeast', 'isometric/cars/supercar/southeast.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-south', 'isometric/cars/supercar/south.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-southwest', 'isometric/cars/supercar/southwest.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-west', 'isometric/cars/supercar/west.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
+        this.load.spritesheet('car-northwest', 'isometric/cars/supercar/northwest.png', { 
+            frameWidth: 100, 
+            frameHeight: 100
+        });
     }
 
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
-
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
+        //  Move to the MainMenu
         this.scene.start('MainMenu');
     }
 }

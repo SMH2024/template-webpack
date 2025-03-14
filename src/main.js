@@ -16,6 +16,15 @@ const config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
+    // Enable Matter.js physics engine
+    physics: {
+        default: 'matter',
+        matter: {
+            debug: false,
+            gravity: { y: 0 }, // Disable gravity for top-down car physics
+            setBounds: false
+        }
+    },
     scene: [
         Boot,
         Preloader,
