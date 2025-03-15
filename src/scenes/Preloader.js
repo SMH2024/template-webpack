@@ -37,11 +37,12 @@ export class Preloader extends Scene
         // Load isometric pixel tile
         this.load.image('iso-pixel', 'isometric/isometric_pixel_0215.png');
         
-        // Load car spritesheet
-        this.load.spritesheet('car', 
-            'isometric/cars/blackcaralldirections.png',
-            { frameWidth: 100, frameHeight: 100 }
-        );
+        // Load car assets - new car body and wheels
+        this.load.image('car-body', 'newcar/9.png');
+        this.load.image('wheel1', 'newcar/w1.png');
+        this.load.image('wheel2', 'newcar/w2.png');
+        this.load.image('wheel3', 'newcar/w3.png');
+        this.load.image('wheel4', 'newcar/w4.png');
     }
 
     create ()

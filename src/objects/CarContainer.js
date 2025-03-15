@@ -36,8 +36,8 @@ export default class CarContainer extends Phaser.GameObjects.Container {
       return;
     }
 
-    // Create the sprite with physics
-    this.sprite = this.scene.add.sprite(0, 0, 'car-east');
+    // Create the sprite with physics using the new car body image
+    this.sprite = this.scene.add.sprite(0, 0, 'car-body');
     this.sprite.setOrigin(0.5, 0.5);
     
     // Enable physics on the sprite
@@ -78,27 +78,33 @@ export default class CarContainer extends Phaser.GameObjects.Container {
     // Create a container for the car visuals
     this.carContainer = this.scene.add.container(0, 0);
     
-    // Create wheel visualization (mainly for debugging)
+    // Create wheel visualization using the provided wheel images
     this.wheels = [];
-    for (let iy = 0; iy < 2; iy++) {
-      for (let ix = 0; ix < 2; ix++) {
-        const wheel = new Phaser.GameObjects.Rectangle(
-          this.scene,
-          this.AXEL_LENGTH / 2 - iy * this.AXEL_LENGTH,
-          -this.AXEL_WIDTH / 2 + ix * this.AXEL_WIDTH,
-          12,
-          6,
-          0x000000
-        );
-        
-        // Add wheels to the car container
-        this.carContainer.add(wheel);
-        this.wheels.push(wheel);
-      }
-    }
     
-    // Add the sprite to the car container
-    this.carContainer.add(this.sprite);
+    // Define wheel positions and corresponding images
+    const wheelPositions = [
+      { x: this.AXEL_LENGTH / 2, y: -this.AXEL_WIDTH / 2, key: 'wheel1' },  // front-left
+      { x: this.AXEL_LENGTH / 2, y: this.AXEL_WIDTH / 2, key: 'wheel2' },   // front-right
+      { x: -this.AXEL_LENGTH / 2, y: -this.AXEL_WIDTH / 2, key: 'wheel3' }, // rear-left
+      { x: -this.AXEL_LENGTH / 2, y: this.AXEL_WIDTH / 2, key: 'wheel4' }   // rear-right
+    ];
+    
+    // Create each wheel sprite
+    wheelPositions.forEach(pos => {
+      const wheel = this.scene.add.sprite(pos.x, pos.y, pos.key);
+      wheel.setScale(0.2); // Adjust scale as needed to fit your car
+      
+      // Add wheels to the car container
+      this.carContainer.add(wheel);
+      this.wheels.push(wheel);
+    });
+    
+    // Create and add the car body sprite
+    this.carBody = this.scene.add.sprite(0, 0, 'car-body');
+    this.carBody.setScale(0.3); // Adjust scale as needed
+    
+    // Add the car body to the car container
+    this.carContainer.add(this.carBody);
     
     // Add the car container to the main container
     this.add(this.carContainer);

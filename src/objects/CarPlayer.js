@@ -13,43 +13,6 @@ export default class CarPlayer extends CarContainer {
     
     // Keep track of direction
     this.directionIndex = 2; // Start facing right
-    
-    // Store animation directions
-    this.directions = [
-      'up',           // 0
-      'up-right',     // 1
-      'right',        // 2
-      'down-right',   // 3
-      'down',         // 4
-      'down-left',    // 5
-      'left',         // 6
-      'up-left'       // 7
-    ];
-    
-    this.directionMapping = {
-      'up': 'north',
-      'up-right': 'northeast',
-      'right': 'east',
-      'down-right': 'southeast',
-      'down': 'south',
-      'down-left': 'southwest',
-      'left': 'west',
-      'up-left': 'northwest'
-    };
-    
-    // Initial sprite update
-    this.updateCarSprite();
-  }
-  
-  updateCarSprite() {
-    const currentDirection = this.directions[this.directionIndex];
-    const spriteKey = `car-${this.directionMapping[currentDirection]}`;
-    
-    // Update the sprite texture and animation
-    if (this.sprite) {
-      this.sprite.setTexture(spriteKey);
-      this.sprite.anims.play(`car-${currentDirection}`, true);
-    }
   }
   
   preUpdate() {
@@ -81,17 +44,29 @@ export default class CarPlayer extends CarContainer {
       }
     }
     
-    // 4. Handle turning - always update direction for visuals
+    // 4. Handle turning - update car rotation
     if (left && Math.abs(this.speed) > 0.1) {
-      this.directionIndex = (this.directionIndex + 7) % 8; // Turn counter-clockwise
-      this.updateCarSprite();
       this.rotation -= this.turnSpeed;
-    }
-    
-    if (right && Math.abs(this.speed) > 0.1) {
-      this.directionIndex = (this.directionIndex + 1) % 8; // Turn clockwise
-      this.updateCarSprite();
+      
+      // Rotate wheel sprites for visualization
+      if (this.wheels && this.wheels.length === 4) {
+        this.wheels[0].rotation = -0.2; // front-left wheel turns
+        this.wheels[1].rotation = -0.2; // front-right wheel turns
+      }
+    } else if (right && Math.abs(this.speed) > 0.1) {
       this.rotation += this.turnSpeed;
+      
+      // Rotate wheel sprites for visualization
+      if (this.wheels && this.wheels.length === 4) {
+        this.wheels[0].rotation = 0.2; // front-left wheel turns
+        this.wheels[1].rotation = 0.2; // front-right wheel turns
+      }
+    } else {
+      // Reset wheel rotation when not turning
+      if (this.wheels && this.wheels.length === 4) {
+        this.wheels[0].rotation = 0;
+        this.wheels[1].rotation = 0;
+      }
     }
     
     // 5. Calculate velocity based on car's rotation and speed
@@ -108,6 +83,24 @@ export default class CarPlayer extends CarContainer {
     if (Math.abs(this.speed) > 0.5 && (left || right) && this.scene.road) {
       this.drawTireMarks();
     }
+    
+    // 8. Animate wheels based on speed
+    this.animateWheels();
+  }
+  
+  animateWheels() {
+    // Only proceed if we have wheels
+    if (!this.wheels || this.wheels.length !== 4) return;
+    
+    // Rotate wheels based on speed
+    const wheelRotationSpeed = this.speed * 0.1;
+    
+    // Apply rotation to all wheels
+    this.wheels.forEach(wheel => {
+      // Add to the current rotation - this creates a continuous spin effect
+      // The y position affects the direction of rotation for visual accuracy
+      wheel.rotation += wheelRotationSpeed;
+    });
   }
   
   drawTireMarks() {

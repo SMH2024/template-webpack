@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import CarPlayer from '../objects/CarPlayer';
 
 export class Game extends Scene
 {
@@ -8,14 +9,7 @@ export class Game extends Scene
     }
 
     preload() {
-        // Load the isometric pixel tile
-        this.load.image('iso-pixel', 'assets/isometric/isometric_pixel_0215.png');
-        
-        // Load the car spritesheet
-        this.load.spritesheet('car', 
-            'assets/isometric/cars/blackcaralldirections.png',
-            { frameWidth: 100, frameHeight: 100 }
-        );
+        // All assets are now loaded in the Preloader scene
     }
 
     create ()
@@ -25,6 +19,9 @@ export class Game extends Scene
 
         // Create a large flat testing area
         this.createTestingArea();
+        
+        // Setup inputs for car control
+        this.setupInputs();
         
         // Add car to the scene
         this.createCar();
@@ -47,13 +44,58 @@ export class Game extends Scene
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
+    }
+    
+    setupInputs() {
+        // Create input handler for car controls
+        this.inputs = {
+            left: false,
+            right: false,
+            accelerator: false,
+            breaks: false
+        };
         
-        this.directionText = this.add.text(10, 70, 'Direction: none', {
-            fontSize: '16px',
-            fill: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setScrollFactor(0);
+        // Listen for keyboard events
+        this.input.keyboard.on('keydown', (event) => {
+            this.updateInputState(event.keyCode, true);
+        });
+        
+        this.input.keyboard.on('keyup', (event) => {
+            this.updateInputState(event.keyCode, false);
+        });
+    }
+    
+    updateInputState(keyCode, isDown) {
+        // Map key codes to input states
+        switch (keyCode) {
+            case 37: // Left arrow
+                this.inputs.left = isDown;
+                break;
+            case 39: // Right arrow
+                this.inputs.right = isDown;
+                break;
+            case 38: // Up arrow
+                this.inputs.accelerator = isDown;
+                break;
+            case 40: // Down arrow
+                this.inputs.breaks = isDown;
+                break;
+        }
+    }
+    
+    createCar() {
+        // Place car at the center of the test area
+        const startX = this.cameras.main.centerX;
+        const startY = this.cameras.main.centerY;
+        
+        // Create road graphics for tire marks
+        this.road = this.add.graphics();
+        
+        // Create car using our physics-based car system
+        this.car = new CarPlayer(this, startX, startY);
+        
+        // Make camera follow the car
+        this.cameras.main.startFollow(this.car);
     }
 
     createTestingArea() {
@@ -99,209 +141,50 @@ export class Game extends Scene
         this.trackOriginY = centerY - (gridSize * tileHeight / 4);
     }
     
-    createCar() {
-        // Create car animations for 8 directions
-        this.createCarAnimations();
-        
-        // Place car at the center of the test area
-        const startX = this.cameras.main.centerX;
-        const startY = this.cameras.main.centerY;
-        
-        // Create car sprite
-        this.car = this.add.sprite(startX, startY, 'car');
-        this.car.setScale(0.7); // Adjust scale if needed
-        
-        // Set initial direction and speed
-        this.car.direction = 'right'; // Initial direction
-        this.car.speed = 0;
-        this.car.maxSpeed = 3;
-        this.car.acceleration = 0.1;
-        this.car.deceleration = 0.05;
-        
-        // Play initial animation
-        this.car.anims.play('car-right');
-        
-        // Make camera follow the car
-        this.cameras.main.startFollow(this.car);
-    }
-    
-    createCarAnimations() {
-        // Define car frames for 8 directions
-        // Since the spritesheet has each direction in a frame, we can map them directly
-        const directions = [
-            'down',         // Frame 0
-            'down-right',   // Frame 1
-            'right',        // Frame 2
-            'up-right',     // Frame 3
-            'up',           // Frame 4
-            'up-left',      // Frame 5
-            'left',         // Frame 6
-            'down-left'     // Frame 7
-        ];
-        
-        // Create an animation for each direction
-        directions.forEach((direction, index) => {
-            this.anims.create({
-                key: `car-${direction}`,
-                frames: [{ key: 'car', frame: index }],
-                frameRate: 10,
-                repeat: -1
-            });
-        });
-    }
-    
     setupCameraControls() {
         // Set up keyboard input
         this.cursors = this.input.keyboard.createCursorKeys();
     }
     
-    // Convert tile coordinates to world coordinates
+    updateDebugInfo() {
+        // Update speed text
+        if (this.car) {
+            this.speedText.setText(`Speed: ${this.car.speed.toFixed(2)}`);
+        }
+    }
+    
     tileToWorldX(x, y) {
-        return this.trackOriginX + ((x - y) * this.tileWidth / 2);
+        return this.trackOriginX + (x - y) * (this.tileWidth / 2);
     }
     
     tileToWorldY(x, y) {
-        return this.trackOriginY + ((x + y) * this.tileHeight / 2);
+        return this.trackOriginY + (x + y) * (this.tileHeight / 4);
     }
     
-    // Convert world coordinates to tile coordinates (approximate)
     worldToTileCoords(worldX, worldY) {
-        const relativeX = worldX - this.trackOriginX;
-        const relativeY = worldY - this.trackOriginY;
+        // Convert from world coordinates to isometric tile coordinates
+        worldX -= this.trackOriginX;
+        worldY -= this.trackOriginY;
         
-        // Convert from isometric to cartesian coordinates
-        const cartX = (2 * relativeY + relativeX) / this.tileWidth;
-        const cartY = (2 * relativeY - relativeX) / this.tileWidth;
+        const tileX = (worldX / (this.tileWidth / 2) + worldY / (this.tileHeight / 4)) / 2;
+        const tileY = (worldY / (this.tileHeight / 4) - worldX / (this.tileWidth / 2)) / 2;
         
-        return {
-            x: Math.floor(cartX),
-            y: Math.floor(cartY)
-        };
+        return { tileX: Math.floor(tileX), tileY: Math.floor(tileY) };
     }
     
-    // Always return true for the test area - no boundary restrictions
     isOnTrack(worldX, worldY) {
-        return true; // No boundary restrictions for testing
+        // Determine if the given world coordinates are on the track
+        // This is a placeholder - replace with actual track collision logic
+        return true; // For now, the entire area is considered "on track"
     }
     
     update() {
-        // Handle car movement based on arrow keys
-        this.handleCarMovement();
+        // Call car's preUpdate method which handles all car physics
+        if (this.car) {
+            this.car.preUpdate();
+        }
         
         // Update debug info
         this.updateDebugInfo();
-    }
-    
-    updateDebugInfo() {
-        // Update speed text
-        this.speedText.setText(`Speed: ${this.car.speed.toFixed(2)}`);
-        
-        // Update direction text
-        this.directionText.setText(`Direction: ${this.car.direction}`);
-    }
-    
-    handleCarMovement() {
-        // Store the current position for reverting if needed
-        const prevX = this.car.x;
-        const prevY = this.car.y;
-        
-        // Reset speed when no keys are pressed
-        if (!this.cursors.up.isDown && !this.cursors.down.isDown) {
-            // Natural deceleration
-            if (this.car.speed > 0) {
-                this.car.speed = Math.max(0, this.car.speed - this.car.deceleration);
-            } else if (this.car.speed < 0) {
-                this.car.speed = Math.min(0, this.car.speed + this.car.deceleration);
-            }
-        }
-        
-        // Handle acceleration and direction
-        if (this.cursors.up.isDown) {
-            // Accelerate forward
-            this.car.speed = Math.min(this.car.maxSpeed, this.car.speed + this.car.acceleration);
-        } else if (this.cursors.down.isDown) {
-            // Accelerate backward
-            this.car.speed = Math.max(-this.car.maxSpeed/2, this.car.speed - this.car.acceleration);
-        }
-        
-        // Determine direction based on arrow keys
-        let directionChanged = false;
-        let direction = '';
-        
-        if (this.cursors.up.isDown) {
-            if (this.cursors.left.isDown) {
-                direction = 'up-left';
-            } else if (this.cursors.right.isDown) {
-                direction = 'up-right';
-            } else {
-                direction = 'up';
-            }
-            directionChanged = true;
-        } else if (this.cursors.down.isDown) {
-            if (this.cursors.left.isDown) {
-                direction = 'down-left';
-            } else if (this.cursors.right.isDown) {
-                direction = 'down-right';
-            } else {
-                direction = 'down';
-            }
-            directionChanged = true;
-        } else if (this.cursors.left.isDown) {
-            direction = 'left';
-            directionChanged = true;
-        } else if (this.cursors.right.isDown) {
-            direction = 'right';
-            directionChanged = true;
-        }
-        
-        // Update car animation if direction changed
-        if (directionChanged && direction !== '') {
-            this.car.direction = direction;
-            this.car.anims.play(`car-${direction}`);
-        }
-        
-        // Move car based on current direction and speed
-        if (this.car.speed !== 0) {
-            let dx = 0;
-            let dy = 0;
-            
-            // Calculate movement based on direction
-            switch(this.car.direction) {
-                case 'up':
-                    dy = -this.car.speed;
-                    break;
-                case 'up-right':
-                    dx = this.car.speed * 0.7;
-                    dy = -this.car.speed * 0.7;
-                    break;
-                case 'right':
-                    dx = this.car.speed;
-                    break;
-                case 'down-right':
-                    dx = this.car.speed * 0.7;
-                    dy = this.car.speed * 0.7;
-                    break;
-                case 'down':
-                    dy = this.car.speed;
-                    break;
-                case 'down-left':
-                    dx = -this.car.speed * 0.7;
-                    dy = this.car.speed * 0.7;
-                    break;
-                case 'left':
-                    dx = -this.car.speed;
-                    break;
-                case 'up-left':
-                    dx = -this.car.speed * 0.7;
-                    dy = -this.car.speed * 0.7;
-                    break;
-            }
-            
-            // Update car position
-            this.car.x += dx;
-            this.car.y += dy;
-            
-            // No boundary check for testing purposes
-        }
     }
 }
