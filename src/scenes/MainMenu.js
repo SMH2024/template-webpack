@@ -13,7 +13,7 @@ export class MainMenu extends Scene
 
         this.add.image(512, 300, 'logo');
 
-        this.add.text(512, 200, 'CAR CONTROL TEST', {
+        this.add.text(512, 200, 'ISOMETRIC CAR TEST', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
@@ -32,7 +32,7 @@ export class MainMenu extends Scene
         }).setOrigin(0.5);
         
         // Instructions
-        this.add.text(512, 540, 'Left/Right: Turn car gradually\nA: Accelerate\nZ: Brake/Reverse\nNow with realistic physics!', {
+        this.add.text(512, 540, 'Up/Down: Accelerate/Brake\nLeft/Right: Steer\n(No track boundaries in test mode)', {
             fontFamily: 'Arial', fontSize: 18, color: '#ffffff',
             stroke: '#000000', strokeThickness: 4,
             align: 'center'

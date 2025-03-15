@@ -2,7 +2,7 @@ export default class Inputs {
   constructor(scene) {
     this.scene = scene;
     
-    // Add keyboard keys
+    // Add keyboard keys - using simple direct input
     this.keys = this.scene.input.keyboard.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.UP,
       down: Phaser.Input.Keyboard.KeyCodes.DOWN,
@@ -13,6 +13,7 @@ export default class Inputs {
     });
   }
   
+  // Simple direct input methods
   get accelerator() {
     return this.keys.A.isDown;
   }

@@ -1,20 +1,18 @@
 // Game configuration constants
-export const GAME_CONFIG = {
-    movement: {
-        baseSpeed: 120,
-        sprintMultiplier: 1.5
-    },
-    animations: {
-        frameRate: 12,
-        walkFrameRate: 8
-    },
+export default {
+    // Physics settings
     physics: {
-        debug: false,
-        worldBounds: {
-            x: 0,
-            y: 0,
-            width: 1024,
-            height: 768
-        }
+        carMaxSpeed: 5,
+        carAcceleration: 0.2,
+        carDeceleration: 0.05,
+        carTurnSpeed: 0.05
+    },
+    
+    // Car controls
+    controls: {
+        accelerate: 'A',
+        brake: 'Z',
+        left: 'LEFT',
+        right: 'RIGHT'
     }
-};
+}; 
